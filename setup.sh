@@ -14,7 +14,7 @@
 #    3. Homebrew             — helpers, prerequisites, install functions
 #    4. Shell Setup          — Oh My Zsh, Powerlevel10k, zsh plugins, .zshrc aliases
 #    5. Developer Tools      — git, VS Code extensions, SSH key, Firefox extensions,
-#                              dev folder, AI skills dirs, Claude Code
+#                              dev folder, AI skills dirs, Obsidian skills, Claude Code
 #    6. macOS Preferences    — Computer Name, Finder, Dock, Keyboard, Screen, System,
 #                              Power, Mail, Safari, Spotlight, Transmission
 #    7. Security             — Gatekeeper
@@ -468,6 +468,20 @@ configure_ai_skills_dirs() {
       run mkdir -p "$dir"
     fi
   done
+}
+
+install_obsidian_skills() {
+  local dest="$HOME/.copilot/skills/obsidian-skills"
+
+  if [[ -d "$dest/.git" ]]; then
+    log "Obsidian skills already installed — pulling latest..."
+    run git -C "$dest" pull --ff-only
+    return 0
+  fi
+
+  log "Installing Obsidian skills for Copilot CLI..."
+  run mkdir -p "$HOME/.copilot/skills"
+  run git clone https://github.com/kepano/obsidian-skills.git "$dest"
 }
 
 install_claude_code() {
@@ -1088,6 +1102,7 @@ main() {
   install_firefox_extensions
   configure_dev_folder
   configure_ai_skills_dirs
+  install_obsidian_skills
   install_claude_code
 
   # ── macOS preferences ──────────────────────────────────────────────────────
