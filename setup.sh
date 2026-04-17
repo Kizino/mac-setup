@@ -149,7 +149,7 @@ ensure_command_line_tools() {
   clt_label=$(softwareupdate --list 2>/dev/null \
     | grep -i "label:.*command line tools" \
     | sed 's/.*Label: //' \
-    | head -1)
+    | head -1 || true)
   if [[ -n "$clt_label" ]]; then
     log "Updating Command Line Tools: $clt_label"
     run sudo softwareupdate --install "$clt_label" --verbose
