@@ -245,6 +245,29 @@ configure_oh_my_zsh() {
 configure_zshrc() {
   local zshrc="$HOME/.zshrc"
 
+  # ── Homebrew PATH (must be first so all brew-installed tools take precedence)
+  # brew shellenv prepends /opt/homebrew/bin to PATH, ensuring Homebrew's
+  # python3, node, etc. win over Apple's /usr/bin counterparts.
+  local brew_marker='# Homebrew PATH (added by mac-reforge)'
+  if grep -qF "$brew_marker" "$zshrc" 2>/dev/null; then
+    log "Homebrew shellenv already in ~/.zshrc."
+  else
+    log "Adding Homebrew shellenv to ~/.zshrc..."
+    local p10k_marker='# Enable Powerlevel10k instant prompt'
+    local brew_block
+    brew_block="$(printf '%s\neval "$(/opt/homebrew/bin/brew shellenv)"\n\n' "$brew_marker")"
+    if [[ "${DRY_RUN:-0}" != "1" ]]; then
+      if grep -qF "$p10k_marker" "$zshrc" 2>/dev/null; then
+        sed -i '' "s|${p10k_marker}|${brew_block}${p10k_marker}|" "$zshrc"
+      else
+        local tmp; tmp="$(mktemp)"
+        { printf '%s' "$brew_block"; cat "$zshrc"; } > "$tmp" && mv "$tmp" "$zshrc"
+      fi
+    else
+      printf '[dry-run] insert Homebrew shellenv before p10k preamble in ~/.zshrc\n'
+    fi
+  fi
+
   # ── fastfetch (must run BEFORE p10k instant prompt preamble)
   # p10k warns about console I/O that happens after its preamble is sourced.
   # Running fastfetch before the preamble is the recommended fix per p10k docs.
