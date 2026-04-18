@@ -142,7 +142,7 @@ Opens the built-in macOS Terminal when you use **Terminal → New External Termi
 brew install copilot-cli
 ```
 
-This pairs with the `~/.copilot/skills` directory and the bundled Obsidian skills setup later in the script.
+This pairs with the `~/.agents/skills` directory and the bundled Obsidian skills setup later in the script.
 
 ---
 
@@ -190,7 +190,7 @@ The script creates these directories if they don't already exist:
 
 ### Obsidian skills
 
-The script also clones [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) into `~/.copilot/skills/obsidian-skills`. These skills teach Copilot CLI how to work with Obsidian vaults (notes, tags, links, templates, etc.). On re-runs, the clone is updated with `git pull --ff-only`.
+The script also clones [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) into `~/.agents/obsidian-skills` and symlinks each skill into `~/.agents/skills/<skill-name>/`. These skills teach Copilot CLI how to work with Obsidian vaults (notes, tags, links, templates, etc.). On re-runs, the clone is updated with `git pull --ff-only`.
 
 After setup, verify the skills loaded in Copilot CLI:
 ```
@@ -393,7 +393,7 @@ The script opens System Settings automatically and waits for you to confirm befo
 15. Installs Firefox extensions (uBlock Origin, Bitwarden)
 16. Creates `~/Documents/dev`
 17. Creates AI agent skills directories (`~/.copilot/skills`, `~/.claude/skills`, `~/.agents/skills`)
-18. Clones **Obsidian skills** (`kepano/obsidian-skills`) into `~/.copilot/skills/`
+18. Clones **Obsidian skills** (`kepano/obsidian-skills`) into `~/.agents/obsidian-skills/`, symlinks skills into `~/.agents/skills/`
 19. Installs **Claude Code** via Homebrew Cask (`brew install --cask claude-code`)
 20. Writes **Karabiner-Elements** config — swaps Cmd ↔ Ctrl on the external keyboard only
 21. Applies all macOS system preferences (Finder → Transmission)
